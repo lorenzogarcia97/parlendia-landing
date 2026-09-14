@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ParlendIA — Atención al cliente por WhatsApp, con IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500;700;900&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12302e;
+    --paper:#eaece7;
+    --card:#f6f7f4;
+    --accent:#d9622c;
+    --gold:#b8863a;
+    --muted:#5b6b63;
+    --line: rgba(18,48,46,0.14);
+    --radius: 4px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  :focus-visible{outline:3px solid var(--accent); outline-offset:3px;}
+  @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
+
+  h1,h2,h3{font-family:'Roboto Slab', serif; margin:0; line-height:1.05;}
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.78rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:0.9rem;
+    display:inline-block;
+  }
+
+  .wrap{max-width:1120px; margin:0 auto; padding:0 1.5rem;}
+
+  /* ---------- NAV ---------- */
+  nav{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:1.4rem 0; position:relative;
+  }
+  .logo{font-family:'Roboto Slab', serif; font-weight:900; font-size:1.3rem; letter-spacing:-0.01em;}
+  .logo span{color:var(--accent);}
+  .nav-links{display:flex; gap:2rem; font-size:0.95rem; font-weight:500;}
+  .nav-links a{text-decoration:none; opacity:0.85;}
+  .nav-links a:hover{opacity:1;}
+  .btn{
+    display:inline-block;
+    background:var(--ink);
+    color:var(--paper);
+    font-weight:600;
+    font-size:0.95rem;
+    padding:0.75rem 1.4rem;
+    border-radius:var(--radius);
+    text-decoration:none;
+    border:none;
+    cursor:pointer;
+  }
+  .btn.primary{background:var(--accent); color:#fff;}
+  .btn:hover{opacity:0.92;}
+
+  .nav-toggle{
+    display:none; background:none; border:none; cursor:pointer;
+    width:40px; height:40px; align-items:center; justify-content:center;
+    font-size:1.4rem; color:var(--ink); line-height:1;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{padding:3.5rem 0 4rem;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:3rem; align-items:center;}
+  .hero h1{font-size:clamp(2.2rem, 4vw, 3.4rem); font-weight:900; letter-spacing:-0.015em;}
+  .hero p.lede{font-size:1.15rem; color:var(--muted); max-width:42ch; margin-top:1.2rem; line-height:1.55;}
+  .hero-ctas{display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;}
+
+  /* Signature element: the "ledger" -- a running receipt-style log of
+     real conversation resolutions, styled like a shop's transaction tape. */
+  .ledger{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:8px;
+    padding:1.6rem 1.6rem 1.2rem;
+    box-shadow:0 24px 48px -20px rgba(18,48,46,0.45);
+  }
+  .ledger-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
+    letter-spacing:0.1em; text-transform:uppercase;
+    color:rgba(234,236,231,0.55);
+    border-bottom:1px dashed rgba(234,236,231,0.25);
+    padding-bottom:0.9rem; margin-bottom:0.9rem;
+  }
+  .ledger-row{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:0.85rem;
+    padding:0.85rem 0;
+    border-bottom:1px dashed rgba(234,236,231,0.18);
+  }
+  .ledger-row:last-child{border-bottom:none;}
+  .ledger-time{color:rgba(234,236,231,0.5); font-size:0.75rem;}
+  .ledger-q{margin:0.35rem 0; color:var(--paper);}
+  .ledger-a{color:var(--gold); display:flex; justify-content:space-between; gap:1rem;}
+  .ledger-a .tag{color:rgba(234,236,231,0.45); font-size:0.72rem; white-space:nowrap;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{padding:4rem 0;}
+  .section-head{max-width:46ch; margin-bottom:2.5rem;}
+  .section-head h2{font-size:clamp(1.6rem, 2.6vw, 2.2rem);}
+  .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:1.5rem;}
+  .step{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:1.8rem;}
+  .step-num{
+    font-family:'IBM Plex Mono', monospace; color:var(--accent);
+    font-size:0.85rem; margin-bottom:0.9rem;
+  }
+  .step h3{font-size:1.2rem; margin-bottom:0.6rem;}
+  .step p{color:var(--muted); font-size:0.95rem; line-height:1.5; margin:0;}
+
+  /* ---------- FEATURES ---------- */
+  .features{padding:4rem 0; background:var(--card); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .feature-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2.2rem 3rem;}
+  .feature h3{font-size:1.05rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.6rem;}
+  .feature h3::before{content:"—"; color:var(--accent); font-weight:900;}
+  .feature p{color:var(--muted); font-size:0.95rem; line-height:1.55; margin:0;}
+
+  /* ---------- CTA ---------- */
+  .cta{padding:5rem 0; text-align:center;}
+  .cta h2{font-size:clamp(1.8rem, 3vw, 2.6rem); max-width:22ch; margin:0 auto 1.2rem;}
+  .cta p{color:var(--muted); max-width:40ch; margin:0 auto 2rem;}
+
+  /* ---------- FOOTER ---------- */
+  footer{border-top:1px solid var(--line); padding:2.2rem 0;}
+  .footer-row{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;}
+  .footer-links{display:flex; gap:1.6rem; font-size:0.88rem;}
+  .footer-links a{text-decoration:none; color:var(--muted);}
+  .footer-links a:hover{color:var(--ink);}
+  .footer-note{font-size:0.82rem; color:var(--muted);}
+
+  /* ---------- WIDGET DE PRUEBA (flotante, sin backend real) ---------- */
+  .widget-demo-launcher{
+    position:fixed; right:1.5rem; bottom:1.5rem; z-index:40;
+    width:58px; height:58px; border-radius:50%;
+    background:var(--accent); color:#fff; border:none; cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 12px 28px -8px rgba(18,48,46,0.5);
+  }
+  .widget-demo-launcher svg{width:26px; height:26px;}
+  .widget-demo-panel{
+    position:fixed; right:1.5rem; bottom:5.5rem; z-index:40;
+    width:min(340px, calc(100vw - 3rem));
+    background:var(--paper); border:1px solid var(--line); border-radius:10px;
+    box-shadow:0 24px 48px -16px rgba(18,48,46,0.4);
+    overflow:hidden;
+    opacity:0; transform:translateY(12px); pointer-events:none;
+    transition:opacity .18s ease, transform .18s ease;
+  }
+  .widget-demo-panel.open{opacity:1; transform:translateY(0); pointer-events:auto;}
+  .widget-demo-head{
+    background:var(--ink); color:var(--paper);
+    padding:0.9rem 1rem; display:flex; justify-content:space-between; align-items:center;
+  }
+  .widget-demo-head strong{font-family:'Roboto Slab', serif; font-size:0.95rem;}
+  .widget-demo-close{background:none; border:none; color:var(--paper); opacity:0.7; cursor:pointer; font-size:1.1rem; line-height:1;}
+  .widget-demo-close:hover{opacity:1;}
+  .widget-demo-banner{
+    font-size:0.74rem; color:var(--muted); background:var(--card);
+    padding:0.55rem 1rem; border-bottom:1px dashed var(--line);
+  }
+  .widget-demo-body{padding:1rem; display:flex; flex-direction:column; gap:0.55rem;}
+  .wd-bubble{max-width:82%; padding:0.55rem 0.8rem; border-radius:12px; font-size:0.87rem; line-height:1.4;}
+  .wd-bubble.visitante{align-self:flex-end; background:var(--card); border:1px solid var(--line); border-bottom-right-radius:3px;}
+  .wd-bubble.agente{align-self:flex-start; background:var(--ink); color:var(--paper); border-bottom-left-radius:3px;}
+  .wd-bubble.agente.pdf{display:flex; align-items:center; gap:0.5rem; font-size:0.8rem;}
+  .wd-bubble.agente.pdf span.tag{background:var(--paper); color:var(--ink); font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:0.1rem 0.4rem; border-radius:3px; flex-shrink:0;}
+  .wd-bubble{opacity:0; transform:translateY(6px); animation:wdRise .35s ease forwards;}
+  @keyframes wdRise{ to{opacity:1; transform:translateY(0);} }
+  .wd-typing{align-self:flex-start; background:var(--ink); border-radius:12px; border-bottom-left-radius:3px; padding:0.65rem 0.9rem; display:flex; gap:4px;}
+  .wd-typing span{width:6px; height:6px; border-radius:50%; background:rgba(234,236,231,0.6); animation:wdBounce 1s infinite ease-in-out;}
+  .wd-typing span:nth-child(2){animation-delay:.15s;}
+  .wd-typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes wdBounce{ 0%,80%,100%{transform:translateY(0); opacity:.5;} 40%{transform:translateY(-4px); opacity:1;} }
+
+
+  @media (max-width: 860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+    .feature-grid{grid-template-columns:1fr;}
+    .nav-links{
+      display:none;
+      position:absolute; top:100%; left:0; right:0;
+      background:var(--paper); border:1px solid var(--line); border-top:none;
+      flex-direction:column; gap:0; padding:0.4rem 0;
+      box-shadow:0 12px 20px -12px rgba(18,48,46,0.25);
+    }
+    .nav-links.open{display:flex;}
+    .nav-links a{padding:0.85rem 1.5rem;}
+    .nav-toggle{display:flex;}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <nav>
+    <div class="logo">Parlend<span>IA</span></div>
+    <div class="nav-links" id="navLinks">
+      <a href="#como-funciona">Primeros pasos</a>
+      <a href="#funciones">Funciones</a>
+      <a href="privacidad.html">Privacidad</a>
+      <a href="terminos.html">Términos</a>
+    </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">☰</button>
+    <a href="#contacto" class="btn primary">Hablemos</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Atención al cliente por WhatsApp · con IA</span>
+      <h1>Mientras duermes,<br>tu WhatsApp sigue atendiendo.</h1>
+      <p class="lede">Cada negocio conecta su propio WhatsApp. La IA responde con la información real de ese negocio — horarios, políticas, stock — no con respuestas genéricas.</p>
+      <div class="hero-ctas">
+        <a href="#contacto" class="btn primary">Quiero probarlo</a>
+        <a href="#como-funciona" class="btn" style="background:transparent; border:1px solid var(--line); color:var(--ink);">Ver cómo funciona</a>
+      </div>
+    </div>
+
+    <div class="ledger" aria-label="Ejemplo de conversaciones resueltas">
+      <div class="ledger-head">
+        <span>Libro de conversaciones</span>
+        <span>Hoy</span>
+      </div>
+      <div class="ledger-row">
+        <div class="ledger-time">09:14 — Cliente</div>
+        <div class="ledger-q">"¿Tienen la talla M disponible?"</div>
+        <div class="ledger-a"><span>Sí, 4 unidades en stock.</span><span class="tag">resuelto en 2s</span></div>
+      </div>
+      <div class="ledger-row">
+        <div class="ledger-time">14:02 — Cliente</div>
+        <div class="ledger-q">"¿Cuál es su horario?"</div>
+        <div class="ledger-a"><span>Lunes a viernes, 9 a 18 hrs.</span><span class="tag">resuelto en 1s</span></div>
+      </div>
+      <div class="ledger-row">
+        <div class="ledger-time">23:47 — Cliente</div>
+        <div class="ledger-q">"¿Aceptan devoluciones?"</div>
+        <div class="ledger-a"><span>Sí, dentro de 30 días con boleta.</span><span class="tag">resuelto en 1s</span></div>
+      </div>
+      <div class="ledger-row">
+        <div class="ledger-time">16:30 — Cliente</div>
+        <div class="ledger-q">"¿Me arman una cotización?"</div>
+        <div class="ledger-a"><span>Cotización enviada por WhatsApp.</span><span class="tag">PDF adjunto</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="how" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Cómo funciona</span>
+      <h2>Tres pasos, no un proyecto de meses.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Conecta tu WhatsApp</h3>
+        <p>Tu propio número de WhatsApp Business, conectado a la plataforma. Nadie más ve tus conversaciones ni tus datos. Si quieres, suma el mismo agente como un chat en tu propio sitio web.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>Sube lo que ya tienes</h3>
+        <p>Horarios, políticas, catálogo, preguntas frecuentes. La IA aprende de tus propios documentos, no inventa respuestas.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Responde sola, 24/7</h3>
+        <p>Cada mensaje se guarda y se contesta al instante, de día o de madrugada, sin que nadie tenga que estar mirando el teléfono.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="funciones">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Por dentro</span>
+      <h2>Hecho para negocios reales, no para una demo.</h2>
+    </div>
+    <div class="feature-grid">
+      <div class="feature">
+        <h3>Tus datos, separados de verdad</h3>
+        <p>Cada negocio vive aislado a nivel de base de datos, no solo por configuración — un negocio nunca puede ver los datos de otro, garantizado por diseño.</p>
+      </div>
+      <div class="feature">
+        <h3>Respuestas con información real</h3>
+        <p>La IA busca en tus propios documentos antes de contestar. Si no sabe algo, lo dice — no inventa políticas ni precios.</p>
+      </div>
+      <div class="feature">
+        <h3>Datos en vivo, no solo estáticos</h3>
+        <p>Consultas de stock o estado de pedido se responden contra tus sistemas reales, en el momento, no con información desactualizada.</p>
+      </div>
+      <div class="feature">
+        <h3>Nunca se pierde un mensaje</h3>
+        <p>Si algo falla en el camino, se reintenta solo. Ningún mensaje de un cliente queda sin respuesta por un error técnico pasajero.</p>
+      </div>
+      <div class="feature">
+        <h3>El mismo agente en tu sitio web</h3>
+        <p>Un widget de chat embebible, para que un visitante te pregunte sin salir de tu página — con la opción de seguir la conversación por WhatsApp si prefiere.</p>
+      </div>
+      <div class="feature">
+        <h3>Cotizaciones automáticas</h3>
+        <p>Cuando un cliente pide precio, el agente arma una cotización en PDF con los ítems y el total, y la manda por WhatsApp en el momento.</p>
+      </div>
+      <div class="feature">
+        <h3>Estadísticas claras</h3>
+        <p>Un panel con cuántas conversaciones hubo, a qué hora del día, y cuántos clientes pidieron hablar con una persona en vez del agente.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta" id="contacto">
+  <div class="wrap">
+    <h2>¿Listo para que tu WhatsApp trabaje solo?</h2>
+    <p>Conversemos sobre tu negocio y cómo conectarlo.</p>
+    <a href="mailto:hola@parlendia.cl" class="btn primary">Escríbenos</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap footer-row">
+    <div class="footer-note">© 2026 ParlendIA, un producto de GrupoLG. Todos los derechos reservados.</div>
+    <div class="footer-links">
+      <a href="privacidad.html">Política de Privacidad</a>
+      <a href="terminos.html">Términos de Servicio</a>
+    </div>
+  </div>
+</footer>
+
+<button class="widget-demo-launcher" id="wdLauncher" aria-label="Abrir widget de prueba" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</button>
+
+<div class="widget-demo-panel" id="wdPanel" role="dialog" aria-label="Widget embebido de prueba">
+  <div class="widget-demo-head">
+    <strong>Parlend<span style="color:var(--accent)">IA</span></strong>
+    <button class="widget-demo-close" id="wdClose" aria-label="Cerrar widget de prueba">✕</button>
+  </div>
+  <div class="widget-demo-banner">Esto es un Widget Embebido de Prueba — así se vería en tu sitio. No está conectado a una IA real.</div>
+  <div class="widget-demo-body" id="wdBody"></div>
+</div>
+
+<script>
+  (function(){
+    var toggle = document.getElementById('navToggle');
+    var links = document.getElementById('navLinks');
+    function setOpen(open){
+      links.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.textContent = open ? '✕' : '☰';
+    }
+    toggle.addEventListener('click', function(){
+      setOpen(!links.classList.contains('open'));
+    });
+    links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+  })();
+</script>
+
+<script>
+  (function(){
+    var launcher = document.getElementById('wdLauncher');
+    var panel = document.getElementById('wdPanel');
+    var closeBtn = document.getElementById('wdClose');
+    var body = document.getElementById('wdBody');
+    var timers = [];
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var steps = [
+      {wait:450, type:'bubble', from:'visitante', text:'¿Tienen stock del modelo azul?'},
+      {wait:850, type:'typing'},
+      {wait:1300, type:'bubble', from:'agente', text:'Sí, 6 unidades disponibles. ¿Quieres que te arme una cotización?'},
+      {wait:900, type:'bubble', from:'visitante', text:'Sí, envíamela'},
+      {wait:850, type:'typing'},
+      {wait:1200, type:'bubble', from:'agente', pdf:true, text:'cotizacion.pdf'}
+    ];
+
+    function clearTimers(){
+      timers.forEach(function(t){ clearTimeout(t); });
+      timers = [];
+    }
+
+    function addBubble(step){
+      var el = document.createElement('div');
+      el.className = 'wd-bubble ' + step.from + (step.pdf ? ' pdf' : '');
+      if (step.pdf){
+        el.innerHTML = '<span class="tag">PDF</span> ' + step.text;
+      } else {
+        el.textContent = step.text;
+      }
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function addTyping(){
+      var el = document.createElement('div');
+      el.className = 'wd-typing';
+      el.id = 'wdTyping';
+      el.innerHTML = '<span></span><span></span><span></span>';
+      body.appendChild(el);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    function removeTyping(){
+      var el = document.getElementById('wdTyping');
+      if (el) el.remove();
+    }
+
+    function play(){
+      body.innerHTML = '';
+      clearTimers();
+
+      if (reduced){
+        // Sin animación: mostrar la conversación completa de una
+        steps.filter(function(s){ return s.type === 'bubble'; })
+             .forEach(addBubble);
+        return;
+      }
+
+      var elapsed = 0;
+      steps.forEach(function(step){
+        elapsed += step.wait;
+        timers.push(setTimeout(function(){
+          if (step.type === 'typing'){ addTyping(); }
+          else { removeTyping(); addBubble(step); }
+        }, elapsed));
+      });
+    }
+
+    function toggle(open){
+      panel.classList.toggle('open', open);
+      launcher.setAttribute('aria-expanded', String(open));
+      if (open) play(); else clearTimers();
+    }
+
+    launcher.addEventListener('click', function(){
+      toggle(!panel.classList.contains('open'));
+    });
+    closeBtn.addEventListener('click', function(){ toggle(false); });
+  })();
+</script>
+
+</body>
+</html>
