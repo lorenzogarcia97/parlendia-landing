@@ -3,20 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ParlendIA — Atención al cliente por WhatsApp, con IA</title>
+<title>ParlendIA — Tu Ejecutivo de Ventas Virtual para WhatsApp</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500;700;900&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#12302e;
-    --paper:#eaece7;
-    --card:#f6f7f4;
-    --accent:#d9622c;
-    --gold:#b8863a;
-    --muted:#5b6b63;
-    --line: rgba(18,48,46,0.14);
-    --radius: 4px;
+    --ink:#0f2247;
+    --ink-soft:#16345c;
+    --paper:#f2f4fa;
+    --card:#ffffff;
+    --accent:#2fdc94;
+    --accent-dark:#17a874;
+    --blue:#2f6fed;
+    --muted:#57678a;
+    --text:#2a3a56;
+    --line: rgba(15,34,71,0.14);
+    --radius: 6px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -28,36 +31,59 @@
     -webkit-font-smoothing:antialiased;
   }
   a{color:inherit;}
-  :focus-visible{outline:3px solid var(--accent); outline-offset:3px;}
+  :focus-visible{outline:3px solid var(--blue); outline-offset:3px;}
   @media (prefers-reduced-motion: reduce){ *{animation:none !important; transition:none !important;} }
 
-  h1,h2,h3{font-family:'Roboto Slab', serif; margin:0; line-height:1.05;}
+  h1,h2,h3{font-family:'Work Sans', sans-serif; font-weight:800; margin:0; line-height:1.08;}
   .eyebrow{
-    font-family:'IBM Plex Mono', monospace;
     font-size:0.78rem;
-    letter-spacing:0.14em;
+    font-weight:700;
+    letter-spacing:0.12em;
     text-transform:uppercase;
-    color:var(--accent);
+    color:var(--blue);
     margin-bottom:0.9rem;
     display:inline-block;
   }
+  .hero .eyebrow{color:var(--accent);}
 
   .wrap{max-width:1120px; margin:0 auto; padding:0 1.5rem;}
+
+  /* ---------- HERO OSCURO (nav + hero comparten fondo azul marino) ---------- */
+  .hero-dark{background:var(--ink); color:#fff;}
 
   /* ---------- NAV ---------- */
   nav{
     display:flex; align-items:center; justify-content:space-between;
     padding:1.4rem 0; position:relative;
   }
-  .logo{font-family:'Roboto Slab', serif; font-weight:900; font-size:1.3rem; letter-spacing:-0.01em;}
+  .logo{font-weight:900; font-size:1.3rem; letter-spacing:-0.01em;}
   .logo span{color:var(--accent);}
-  .nav-links{display:flex; gap:2rem; font-size:0.95rem; font-weight:500;}
+  .nav-links{display:flex; align-items:center; gap:2rem; font-size:0.95rem; font-weight:500;}
   .nav-links a{text-decoration:none; opacity:0.85;}
   .nav-links a:hover{opacity:1;}
+
+  .nav-dropdown{position:relative;}
+  .nav-dropdown-toggle{
+    background:none; border:none; cursor:pointer; font:inherit; color:inherit;
+    display:flex; align-items:center; gap:0.35rem; opacity:0.85; padding:0;
+  }
+  .nav-dropdown-toggle:hover{opacity:1;}
+  .chev{font-size:0.7em; transition:transform .15s ease; display:inline-block;}
+  .nav-dropdown-toggle[aria-expanded="true"] .chev{transform:rotate(180deg);}
+  .nav-dropdown-menu{
+    position:absolute; top:calc(100% + 0.7rem); left:0; z-index:30;
+    background:#fff; color:var(--ink); border-radius:8px; border:1px solid var(--line);
+    box-shadow:0 20px 40px -16px rgba(15,34,71,0.35);
+    min-width:250px; padding:0.5rem; display:none; flex-direction:column; gap:0.1rem;
+  }
+  .nav-dropdown-menu.open{display:flex;}
+  .nav-dropdown-menu a{padding:0.6rem 0.7rem; border-radius:6px; font-size:0.88rem; font-weight:500; opacity:1;}
+  .nav-dropdown-menu a:hover{background:var(--paper);}
+
   .btn{
     display:inline-block;
     background:var(--ink);
-    color:var(--paper);
+    color:#fff;
     font-weight:600;
     font-size:0.95rem;
     padding:0.75rem 1.4rem;
@@ -66,50 +92,54 @@
     border:none;
     cursor:pointer;
   }
-  .btn.primary{background:var(--accent); color:#fff;}
+  .btn.primary{background:var(--accent); color:var(--ink);}
+  .btn.secondary-light{background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.35); color:#fff;}
+  .btn.pill-light{background:#eef1f8; color:var(--ink); border-radius:999px; padding:0.65rem 1.3rem;}
   .btn:hover{opacity:0.92;}
 
   .nav-toggle{
     display:none; background:none; border:none; cursor:pointer;
     width:40px; height:40px; align-items:center; justify-content:center;
-    font-size:1.4rem; color:var(--ink); line-height:1;
+    font-size:1.4rem; color:#fff; line-height:1;
   }
 
   /* ---------- HERO ---------- */
-  .hero{padding:3.5rem 0 4rem;}
+  .hero{padding:3.5rem 0 5rem;}
   .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:3rem; align-items:center;}
-  .hero h1{font-size:clamp(2.2rem, 4vw, 3.4rem); font-weight:900; letter-spacing:-0.015em;}
-  .hero p.lede{font-size:1.15rem; color:var(--muted); max-width:42ch; margin-top:1.2rem; line-height:1.55;}
+  .hero h1{font-size:clamp(2.2rem, 4vw, 3.4rem); letter-spacing:-0.015em; color:#fff;}
+  .hero p.lede{font-size:1.15rem; color:rgba(255,255,255,0.72); max-width:42ch; margin-top:1.2rem; line-height:1.55;}
   .hero-ctas{display:flex; gap:1rem; margin-top:2rem; flex-wrap:wrap;}
 
-  /* Signature element: the "ledger" -- a running receipt-style log of
-     real conversation resolutions, styled like a shop's transaction tape. */
-  .ledger{
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:8px;
-    padding:1.6rem 1.6rem 1.2rem;
-    box-shadow:0 24px 48px -20px rgba(18,48,46,0.45);
+  /* ---------- MOCKUP DE LAPTOP (conversación de WhatsApp) ---------- */
+  .laptop{max-width:460px; margin-left:auto; filter:drop-shadow(0 30px 55px rgba(5,12,28,0.55));}
+  .laptop-screen{background:#0c1830; border-radius:14px 14px 0 0; border:10px solid #16345c; border-bottom:none; overflow:hidden;}
+  .laptop-bar{display:flex; align-items:center; gap:0.4rem; padding:0.65rem 0.9rem; background:#132342;}
+  .laptop-bar .dot{width:9px; height:9px; border-radius:50%;}
+  .laptop-bar .dot.r{background:#ff5f57;} .laptop-bar .dot.y{background:#ffbd2e;} .laptop-bar .dot.g{background:#28c840;}
+  .laptop-title{margin-left:0.6rem; font-size:0.74rem; color:rgba(255,255,255,0.55);}
+  .laptop-body{background:#fff; padding:1.1rem; min-height:300px;}
+  .chat-head{display:flex; align-items:center; gap:0.65rem; padding-bottom:0.85rem; border-bottom:1px solid var(--line); margin-bottom:0.85rem;}
+  .chat-avatar{
+    width:38px; height:38px; border-radius:50%; flex-shrink:0;
+    background:var(--accent); color:var(--ink);
+    display:flex; align-items:center; justify-content:center; font-weight:800; font-size:0.95rem;
   }
-  .ledger-head{
-    display:flex; justify-content:space-between; align-items:baseline;
-    font-family:'IBM Plex Mono', monospace; font-size:0.72rem;
-    letter-spacing:0.1em; text-transform:uppercase;
-    color:rgba(234,236,231,0.55);
-    border-bottom:1px dashed rgba(234,236,231,0.25);
-    padding-bottom:0.9rem; margin-bottom:0.9rem;
+  .chat-name{font-weight:700; font-size:0.9rem; color:var(--ink);}
+  .chat-status{font-size:0.72rem; color:var(--muted); display:flex; align-items:center; gap:0.35rem; margin-top:0.1rem;}
+  .dot-online{width:6px; height:6px; border-radius:50%; background:var(--accent); display:inline-block;}
+  .chat-messages{display:flex; flex-direction:column; gap:0.6rem;}
+  .msg{max-width:80%; padding:0.6rem 0.85rem; border-radius:12px; font-size:0.85rem; line-height:1.42;
+    opacity:0; transform:translateY(6px); animation:msgRise .35s ease forwards;}
+  @keyframes msgRise{ to{opacity:1; transform:translateY(0);} }
+  .msg.in{align-self:flex-start; background:var(--paper); color:var(--ink); border-bottom-left-radius:3px;}
+  .msg.out{align-self:flex-end; background:var(--accent); color:var(--ink); border-bottom-right-radius:3px;}
+  .msg.out.pdf{display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap;}
+  .msg.out.pdf .tag{background:rgba(15,34,71,0.14); font-size:0.64rem; font-weight:800; padding:0.12rem 0.4rem; border-radius:3px;}
+  .laptop-base{height:16px; background:linear-gradient(#16345c, #0c1830); border-radius:0 0 10px 10px; position:relative;}
+  .laptop-base::after{
+    content:""; position:absolute; left:50%; bottom:-6px; transform:translateX(-50%);
+    width:26%; height:6px; background:#0c1830; border-radius:0 0 6px 6px;
   }
-  .ledger-row{
-    font-family:'IBM Plex Mono', monospace;
-    font-size:0.85rem;
-    padding:0.85rem 0;
-    border-bottom:1px dashed rgba(234,236,231,0.18);
-  }
-  .ledger-row:last-child{border-bottom:none;}
-  .ledger-time{color:rgba(234,236,231,0.5); font-size:0.75rem;}
-  .ledger-q{margin:0.35rem 0; color:var(--paper);}
-  .ledger-a{color:var(--gold); display:flex; justify-content:space-between; gap:1rem;}
-  .ledger-a .tag{color:rgba(234,236,231,0.45); font-size:0.72rem; white-space:nowrap;}
 
   /* ---------- HOW IT WORKS ---------- */
   .how{padding:4rem 0;}
@@ -117,24 +147,21 @@
   .section-head h2{font-size:clamp(1.6rem, 2.6vw, 2.2rem);}
   .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:1.5rem;}
   .step{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:1.8rem;}
-  .step-num{
-    font-family:'IBM Plex Mono', monospace; color:var(--accent);
-    font-size:0.85rem; margin-bottom:0.9rem;
-  }
+  .step-num{color:var(--blue); font-weight:800; font-size:0.85rem; margin-bottom:0.9rem;}
   .step h3{font-size:1.2rem; margin-bottom:0.6rem;}
-  .step p{color:var(--muted); font-size:0.95rem; line-height:1.5; margin:0;}
+  .step p{color:var(--text); font-size:0.95rem; line-height:1.5; margin:0;}
 
   /* ---------- FEATURES ---------- */
   .features{padding:4rem 0; background:var(--card); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .feature-grid{display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:2.2rem 3rem;}
   .feature h3{font-size:1.05rem; margin-bottom:0.5rem; display:flex; align-items:center; gap:0.6rem;}
-  .feature h3::before{content:"—"; color:var(--accent); font-weight:900;}
-  .feature p{color:var(--muted); font-size:0.95rem; line-height:1.55; margin:0;}
+  .feature h3::before{content:"—"; color:var(--blue); font-weight:900;}
+  .feature p{color:var(--text); font-size:0.95rem; line-height:1.55; margin:0;}
 
   /* ---------- CTA ---------- */
   .cta{padding:5rem 0; text-align:center;}
   .cta h2{font-size:clamp(1.8rem, 3vw, 2.6rem); max-width:22ch; margin:0 auto 1.2rem;}
-  .cta p{color:var(--muted); max-width:40ch; margin:0 auto 2rem;}
+  .cta p{color:var(--text); max-width:40ch; margin:0 auto 2rem;}
 
   /* ---------- FOOTER ---------- */
   footer{border-top:1px solid var(--line); padding:2.2rem 0;}
@@ -148,27 +175,27 @@
   .widget-demo-launcher{
     position:fixed; right:1.5rem; bottom:1.5rem; z-index:40;
     width:58px; height:58px; border-radius:50%;
-    background:var(--accent); color:#fff; border:none; cursor:pointer;
+    background:var(--accent); color:var(--ink); border:none; cursor:pointer;
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 12px 28px -8px rgba(18,48,46,0.5);
+    box-shadow:0 12px 28px -8px rgba(15,34,71,0.5);
   }
   .widget-demo-launcher svg{width:26px; height:26px;}
   .widget-demo-panel{
     position:fixed; right:1.5rem; bottom:5.5rem; z-index:40;
     width:min(340px, calc(100vw - 3rem));
     background:var(--paper); border:1px solid var(--line); border-radius:10px;
-    box-shadow:0 24px 48px -16px rgba(18,48,46,0.4);
+    box-shadow:0 24px 48px -16px rgba(15,34,71,0.4);
     overflow:hidden;
     opacity:0; transform:translateY(12px); pointer-events:none;
     transition:opacity .18s ease, transform .18s ease;
   }
   .widget-demo-panel.open{opacity:1; transform:translateY(0); pointer-events:auto;}
   .widget-demo-head{
-    background:var(--ink); color:var(--paper);
+    background:var(--ink); color:#fff;
     padding:0.9rem 1rem; display:flex; justify-content:space-between; align-items:center;
   }
-  .widget-demo-head strong{font-family:'Roboto Slab', serif; font-size:0.95rem;}
-  .widget-demo-close{background:none; border:none; color:var(--paper); opacity:0.7; cursor:pointer; font-size:1.1rem; line-height:1;}
+  .widget-demo-head strong{font-weight:800; font-size:0.95rem;}
+  .widget-demo-close{background:none; border:none; color:#fff; opacity:0.7; cursor:pointer; font-size:1.1rem; line-height:1;}
   .widget-demo-close:hover{opacity:1;}
   .widget-demo-banner{
     font-size:0.74rem; color:var(--muted); background:var(--card);
@@ -177,13 +204,13 @@
   .widget-demo-body{padding:1rem; display:flex; flex-direction:column; gap:0.55rem;}
   .wd-bubble{max-width:82%; padding:0.55rem 0.8rem; border-radius:12px; font-size:0.87rem; line-height:1.4;}
   .wd-bubble.visitante{align-self:flex-end; background:var(--card); border:1px solid var(--line); border-bottom-right-radius:3px;}
-  .wd-bubble.agente{align-self:flex-start; background:var(--ink); color:var(--paper); border-bottom-left-radius:3px;}
+  .wd-bubble.agente{align-self:flex-start; background:var(--ink); color:#fff; border-bottom-left-radius:3px;}
   .wd-bubble.agente.pdf{display:flex; align-items:center; gap:0.5rem; font-size:0.8rem;}
-  .wd-bubble.agente.pdf span.tag{background:var(--paper); color:var(--ink); font-family:'IBM Plex Mono', monospace; font-size:0.68rem; padding:0.1rem 0.4rem; border-radius:3px; flex-shrink:0;}
+  .wd-bubble.agente.pdf span.tag{background:#fff; color:var(--ink); font-weight:800; font-size:0.68rem; padding:0.1rem 0.4rem; border-radius:3px; flex-shrink:0;}
   .wd-bubble{opacity:0; transform:translateY(6px); animation:wdRise .35s ease forwards;}
   @keyframes wdRise{ to{opacity:1; transform:translateY(0);} }
   .wd-typing{align-self:flex-start; background:var(--ink); border-radius:12px; border-bottom-left-radius:3px; padding:0.65rem 0.9rem; display:flex; gap:4px;}
-  .wd-typing span{width:6px; height:6px; border-radius:50%; background:rgba(234,236,231,0.6); animation:wdBounce 1s infinite ease-in-out;}
+  .wd-typing span{width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.6); animation:wdBounce 1s infinite ease-in-out;}
   .wd-typing span:nth-child(2){animation-delay:.15s;}
   .wd-typing span:nth-child(3){animation-delay:.3s;}
   @keyframes wdBounce{ 0%,80%,100%{transform:translateY(0); opacity:.5;} 40%{transform:translateY(-4px); opacity:1;} }
@@ -193,80 +220,90 @@
     .hero-grid{grid-template-columns:1fr;}
     .steps{grid-template-columns:1fr;}
     .feature-grid{grid-template-columns:1fr;}
+    .laptop{max-width:100%; margin:2.5rem auto 0;}
     .nav-links{
       display:none;
       position:absolute; top:100%; left:0; right:0;
-      background:var(--paper); border:1px solid var(--line); border-top:none;
-      flex-direction:column; gap:0; padding:0.4rem 0;
-      box-shadow:0 12px 20px -12px rgba(18,48,46,0.25);
+      background:#fff; border:1px solid var(--line); border-top:none;
+      flex-direction:column; align-items:stretch; gap:0; padding:0.4rem 0;
+      box-shadow:0 12px 20px -12px rgba(15,34,71,0.3);
     }
     .nav-links.open{display:flex;}
-    .nav-links a{padding:0.85rem 1.5rem;}
+    .nav-links a, .nav-links .nav-dropdown-toggle{padding:0.85rem 1.5rem; color:var(--ink); opacity:1; width:100%; justify-content:space-between;}
+    .nav-links .btn{width:calc(100% - 3rem); margin:0.5rem 1.5rem; text-align:center;}
+    .nav-dropdown-menu{position:static; box-shadow:none; border:none; padding:0 0 0 0.8rem; margin-bottom:0.3rem;}
     .nav-toggle{display:flex;}
   }
 </style>
 </head>
 <body>
 
-<div class="wrap">
-  <nav>
-    <div class="logo">Parlend<span>IA</span></div>
-    <div class="nav-links" id="navLinks">
-      <a href="#como-funciona">Primeros pasos</a>
-      <a href="#funciones">Funciones</a>
-      <a href="privacidad.html">Privacidad</a>
-      <a href="terminos.html">Términos</a>
-      <!-- TEMPORAL: cambiar a https://app.parlendia.cl cuando el
-           dominio parlendia.cl este comprado y configurado. Hoy usa
-           la URL default de Vercel del dashboard porque el dominio
-           propio todavia no esta comprado. -->
-      <a href="https://mensajeria-ia-saa-s-lorenzogarcia97s-projects.vercel.app/login">Iniciar sesión</a>
-    </div>
-    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">☰</button>
-    <a href="#contacto" class="btn primary">Hablemos</a>
-  </nav>
-</div>
-
-<header class="hero">
-  <div class="wrap hero-grid">
-    <div>
-      <span class="eyebrow">Atención al cliente por WhatsApp · con IA</span>
-      <h1>Mientras duermes,<br>tu WhatsApp sigue atendiendo.</h1>
-      <p class="lede">Cada negocio conecta su propio WhatsApp. La IA responde con la información real de ese negocio — horarios, políticas, stock — no con respuestas genéricas.</p>
-      <div class="hero-ctas">
-        <a href="#contacto" class="btn primary">Quiero probarlo</a>
-        <a href="#como-funciona" class="btn" style="background:transparent; border:1px solid var(--line); color:var(--ink);">Ver cómo funciona</a>
+<div class="hero-dark">
+  <div class="wrap">
+    <nav>
+      <div class="logo">Parlend<span>IA</span></div>
+      <div class="nav-links" id="navLinks">
+        <div class="nav-dropdown">
+          <button type="button" class="nav-dropdown-toggle" id="funcToggle" aria-expanded="false" aria-controls="funcMenu">
+            Funciones de Venta <span class="chev">▾</span>
+          </button>
+          <div class="nav-dropdown-menu" id="funcMenu">
+            <a href="#funciones">Widget de chat para tu sitio</a>
+            <a href="#funciones">Cotizaciones automáticas en PDF</a>
+            <a href="#funciones">Estadísticas de conversaciones</a>
+          </div>
+        </div>
+        <a href="#contacto">Precios</a>
+        <a href="mailto:hola@parlendia.cl">Soporte</a>
+        <!-- TEMPORAL: cambiar a https://app.parlendia.cl cuando el
+             dominio parlendia.cl este comprado y configurado. Hoy usa
+             la URL default de Vercel del dashboard porque el dominio
+             propio todavia no esta comprado. -->
+        <a href="https://mensajeria-ia-saa-s-lorenzogarcia97s-projects.vercel.app/login" class="btn pill-light">Iniciar sesión</a>
       </div>
-    </div>
-
-    <div class="ledger" aria-label="Ejemplo de conversaciones resueltas">
-      <div class="ledger-head">
-        <span>Libro de conversaciones</span>
-        <span>Hoy</span>
-      </div>
-      <div class="ledger-row">
-        <div class="ledger-time">09:14 — Cliente</div>
-        <div class="ledger-q">"¿Tienen la talla M disponible?"</div>
-        <div class="ledger-a"><span>Sí, 4 unidades en stock.</span><span class="tag">resuelto en 2s</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="ledger-time">14:02 — Cliente</div>
-        <div class="ledger-q">"¿Cuál es su horario?"</div>
-        <div class="ledger-a"><span>Lunes a viernes, 9 a 18 hrs.</span><span class="tag">resuelto en 1s</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="ledger-time">23:47 — Cliente</div>
-        <div class="ledger-q">"¿Aceptan devoluciones?"</div>
-        <div class="ledger-a"><span>Sí, dentro de 30 días con boleta.</span><span class="tag">resuelto en 1s</span></div>
-      </div>
-      <div class="ledger-row">
-        <div class="ledger-time">16:30 — Cliente</div>
-        <div class="ledger-q">"¿Me arman una cotización?"</div>
-        <div class="ledger-a"><span>Cotización enviada por WhatsApp.</span><span class="tag">PDF adjunto</span></div>
-      </div>
-    </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="navLinks">☰</button>
+    </nav>
   </div>
-</header>
+
+  <header class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Ejecutivo de Ventas Virtual · WhatsApp</span>
+        <h1>Tu mejor Ejecutivo de Ventas Virtual.<br>Atiende con calidez 24/7 en WhatsApp.</h1>
+        <p class="lede">Resuelve dudas, califica prospectos y cierra ventas con el trato amable de un humano — con la información real de tu negocio, no respuestas genéricas.</p>
+        <div class="hero-ctas">
+          <a href="#contacto" class="btn primary">Pruébalo con tu Negocio</a>
+          <a href="#como-funciona" class="btn secondary-light">Ver Cómo Vende</a>
+        </div>
+      </div>
+
+      <div class="laptop" aria-label="Ejemplo de conversación de WhatsApp respondida por ParlendIA">
+        <div class="laptop-screen">
+          <div class="laptop-bar">
+            <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+            <span class="laptop-title">Chat con Cliente</span>
+          </div>
+          <div class="laptop-body">
+            <div class="chat-head">
+              <div class="chat-avatar" aria-hidden="true">C</div>
+              <div>
+                <div class="chat-name">Cliente</div>
+                <div class="chat-status"><span class="dot-online"></span> En línea</div>
+              </div>
+            </div>
+            <div class="chat-messages">
+              <div class="msg in">¿Tienen la talla M disponible?</div>
+              <div class="msg out">Sí, 4 unidades en stock. ¿Te armo una cotización?</div>
+              <div class="msg in">Sí, envíamela por favor</div>
+              <div class="msg out pdf"><span class="tag">PDF</span> Cotización enviada. ¿Cerramos el pedido?</div>
+            </div>
+          </div>
+        </div>
+        <div class="laptop-base"></div>
+      </div>
+    </div>
+  </header>
+</div>
 
 <section class="how" id="como-funciona">
   <div class="wrap">
@@ -287,8 +324,8 @@
       </div>
       <div class="step">
         <div class="step-num">03</div>
-        <h3>Responde sola, 24/7</h3>
-        <p>Cada mensaje se guarda y se contesta al instante, de día o de madrugada, sin que nadie tenga que estar mirando el teléfono.</p>
+        <h3>Vende sola, 24/7</h3>
+        <p>Cada mensaje se guarda y se contesta al instante, de día o de madrugada, calificando prospectos y cerrando ventas sin que nadie tenga que estar mirando el teléfono.</p>
       </div>
     </div>
   </div>
@@ -298,7 +335,7 @@
   <div class="wrap">
     <div class="section-head">
       <span class="eyebrow">Por dentro</span>
-      <h2>Hecho para negocios reales, no para una demo.</h2>
+      <h2>Hecho para vender, no solo para atender.</h2>
     </div>
     <div class="feature-grid">
       <div class="feature">
@@ -335,7 +372,7 @@
 
 <section class="cta" id="contacto">
   <div class="wrap">
-    <h2>¿Listo para que tu WhatsApp trabaje solo?</h2>
+    <h2>¿Listo para que tu WhatsApp venda solo?</h2>
     <p>Conversemos sobre tu negocio y cómo conectarlo.</p>
     <a href="mailto:hola@parlendia.cl" class="btn primary">Escríbenos</a>
   </div>
@@ -377,6 +414,27 @@
       setOpen(!links.classList.contains('open'));
     });
     links.querySelectorAll('a').forEach(function(a){
+      a.addEventListener('click', function(){ setOpen(false); });
+    });
+  })();
+</script>
+
+<script>
+  (function(){
+    var toggle = document.getElementById('funcToggle');
+    var menu = document.getElementById('funcMenu');
+    function setOpen(open){
+      menu.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    }
+    toggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      setOpen(!menu.classList.contains('open'));
+    });
+    document.addEventListener('click', function(e){
+      if (!menu.contains(e.target) && e.target !== toggle) setOpen(false);
+    });
+    menu.querySelectorAll('a').forEach(function(a){
       a.addEventListener('click', function(){ setOpen(false); });
     });
   })();
