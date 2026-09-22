@@ -113,7 +113,7 @@
   .callout-wrap .wrap{display:flex; justify-content:center;}
 
   /* ---------- GENERIC SECTION HEAD ---------- */
-  section{padding:4.5rem 0;}
+  section{padding:4.5rem 0; scroll-margin-top:var(--nav-h, 100px);}
   section.tint{background:var(--panel); border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
   .section-head{max-width:62ch; margin-bottom:2.2rem;}
   .section-head h2{font-size:clamp(1.5rem, 2.4vw, 2.05rem);}
@@ -390,40 +390,7 @@
   </div>
 </section>
 
-<section class="tint" id="como-funciona">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Conversa · Piensa · Actúa · Escala</h2>
-      <p>ParlendIA recibe una necesidad y la transforma en una acción útil.</p>
-    </div>
-    <div class="pillars">
-      <div class="pillar"><div class="word">Conversa</div><p>Entiende lenguaje natural, contexto e intención.</p></div>
-      <div class="pillar"><div class="word">Piensa</div><p>Consulta información, políticas, reglas y sistemas autorizados.</p></div>
-      <div class="pillar"><div class="word">Actúa</div><p>Registra, cotiza, agenda, crea tickets, consulta estados o ejecuta otras tareas permitidas.</p></div>
-      <div class="pillar"><div class="word">Escala</div><p>Cuando corresponde, entrega el caso a una persona con todo el contexto.</p></div>
-    </div>
-
-    <div class="timeline">
-      <div class="timeline-step" data-n="1"><p>Una persona inicia una conversación o un sistema genera una solicitud.</p></div>
-      <div class="timeline-step" data-n="2"><p>ParlendIA identifica la intención y recopila los datos que faltan.</p></div>
-      <div class="timeline-step" data-n="3"><p>Consulta las fuentes y aplicaciones necesarias.</p></div>
-      <div class="timeline-step" data-n="4"><p>Aplica las reglas del proceso definido por la empresa.</p></div>
-      <div class="timeline-step" data-n="5"><p>Ejecuta la acción autorizada o prepara el siguiente paso.</p></div>
-      <div class="timeline-step" data-n="6"><p>Si requiere criterio humano, deriva el caso con el historial y los antecedentes ya ordenados.</p></div>
-    </div>
-  </div>
-</section>
-
-<div class="callout-wrap">
-  <div class="wrap">
-    <div class="callout center">
-      <span class="label">Cambio conceptual</span>
-      <p>La promesa deja de ser "responder mensajes" y pasa a ser: conversación → comprensión → decisión → acción.</p>
-    </div>
-  </div>
-</div>
-
-<section id="capacidades">
+<section class="tint" id="capacidades">
   <div class="wrap">
     <div class="section-head">
       <h2>Qué puede hacer</h2>
@@ -439,25 +406,6 @@
       <li>Derivación inteligente a personas, áreas o especialistas.</li>
       <li>Trazabilidad de interacciones y acciones realizadas.</li>
     </ul>
-  </div>
-</section>
-
-<section class="tint" id="integraciones">
-  <div class="wrap">
-    <div class="section-head">
-      <h2>Se conecta con lo que ya usas</h2>
-      <p>No reemplaza tus sistemas: los pone a conversar entre sí y con tus clientes.</p>
-    </div>
-    <div class="integ-grid">
-      <div class="integ-card"><h3>WhatsApp Business</h3><p>Atención, ventas, soporte, seguimiento y notificaciones.</p></div>
-      <div class="integ-card"><h3>Sitio web</h3><p>Conversación desde la página y continuidad por otros canales.</p></div>
-      <div class="integ-card"><h3>CRM</h3><p>Crear o actualizar prospectos, oportunidades y actividades.</p></div>
-      <div class="integ-card"><h3>ERP / inventario</h3><p>Consultar stock, precios, estados, clientes y documentos.</p></div>
-      <div class="integ-card"><h3>Calendarios</h3><p>Consultar disponibilidad, reservar, modificar y confirmar horas.</p></div>
-      <div class="integ-card"><h3>E-commerce</h3><p>Productos, pedidos, disponibilidad y seguimiento.</p></div>
-      <div class="integ-card"><h3>Correo / ticketing</h3><p>Crear solicitudes, responder, clasificar y derivar.</p></div>
-      <div class="integ-card"><h3>Bases de datos y APIs</h3><p>Integración con sistemas propios o procesos especiales.</p></div>
-    </div>
   </div>
 </section>
 
@@ -521,6 +469,58 @@
     </div>
   </div>
 </section>
+
+<section id="integraciones">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Se conecta con lo que ya usas</h2>
+      <p>No reemplaza tus sistemas: los pone a conversar entre sí y con tus clientes.</p>
+    </div>
+    <div class="integ-grid">
+      <div class="integ-card"><h3>WhatsApp Business</h3><p>Atención, ventas, soporte, seguimiento y notificaciones.</p></div>
+      <div class="integ-card"><h3>Sitio web</h3><p>Conversación desde la página y continuidad por otros canales.</p></div>
+      <div class="integ-card"><h3>CRM</h3><p>Crear o actualizar prospectos, oportunidades y actividades.</p></div>
+      <div class="integ-card"><h3>ERP / inventario</h3><p>Consultar stock, precios, estados, clientes y documentos.</p></div>
+      <div class="integ-card"><h3>Calendarios</h3><p>Consultar disponibilidad, reservar, modificar y confirmar horas.</p></div>
+      <div class="integ-card"><h3>E-commerce</h3><p>Productos, pedidos, disponibilidad y seguimiento.</p></div>
+      <div class="integ-card"><h3>Correo / ticketing</h3><p>Crear solicitudes, responder, clasificar y derivar.</p></div>
+      <div class="integ-card"><h3>Bases de datos y APIs</h3><p>Integración con sistemas propios o procesos especiales.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="tint" id="como-funciona">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Conversa · Piensa · Actúa · Escala</h2>
+      <p>ParlendIA recibe una necesidad y la transforma en una acción útil.</p>
+    </div>
+    <div class="pillars">
+      <div class="pillar"><div class="word">Conversa</div><p>Entiende lenguaje natural, contexto e intención.</p></div>
+      <div class="pillar"><div class="word">Piensa</div><p>Consulta información, políticas, reglas y sistemas autorizados.</p></div>
+      <div class="pillar"><div class="word">Actúa</div><p>Registra, cotiza, agenda, crea tickets, consulta estados o ejecuta otras tareas permitidas.</p></div>
+      <div class="pillar"><div class="word">Escala</div><p>Cuando corresponde, entrega el caso a una persona con todo el contexto.</p></div>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline-step" data-n="1"><p>Una persona inicia una conversación o un sistema genera una solicitud.</p></div>
+      <div class="timeline-step" data-n="2"><p>ParlendIA identifica la intención y recopila los datos que faltan.</p></div>
+      <div class="timeline-step" data-n="3"><p>Consulta las fuentes y aplicaciones necesarias.</p></div>
+      <div class="timeline-step" data-n="4"><p>Aplica las reglas del proceso definido por la empresa.</p></div>
+      <div class="timeline-step" data-n="5"><p>Ejecuta la acción autorizada o prepara el siguiente paso.</p></div>
+      <div class="timeline-step" data-n="6"><p>Si requiere criterio humano, deriva el caso con el historial y los antecedentes ya ordenados.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="callout-wrap">
+  <div class="wrap">
+    <div class="callout center">
+      <span class="label">Cambio conceptual</span>
+      <p>La promesa deja de ser "responder mensajes" y pasa a ser: conversación → comprensión → decisión → acción.</p>
+    </div>
+  </div>
+</div>
 
 <section id="casos-de-uso">
   <div class="wrap">
@@ -664,6 +664,17 @@
     }
     onScroll();
     window.addEventListener('scroll', onScroll, {passive:true});
+
+    // El nav puede envolver a dos filas en ciertos anchos (7 links +
+    // login + CTA no siempre caben en una fila), asi que medimos su
+    // alto real en vez de asumir un valor fijo, para que el scroll a
+    // una seccion no deje el titulo tapado detras del nav sticky.
+    function setNavHeight(){
+      document.documentElement.style.setProperty('--nav-h', (siteNav.offsetHeight + 16) + 'px');
+    }
+    setNavHeight();
+    window.addEventListener('resize', setNavHeight);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavHeight);
   })();
 </script>
 
