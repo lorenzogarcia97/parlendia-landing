@@ -167,7 +167,6 @@
   .agent-card{background:var(--paper); border:1px solid var(--line); border-radius:8px; padding:1.4rem; transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease; -webkit-tap-highlight-color:transparent;}
   .agent-card h3{font-size:1rem; margin-bottom:0.5rem;}
   .agent-card p{font-size:0.88rem; color:var(--muted); line-height:1.5;}
-  .agent-card.featured{border-color:var(--blue); background:#fff;}
 
   /* ---------- CARD HOVER / TOUCH HIGHLIGHT (pillars, integraciones, agentes) ---------- */
   .pillar:hover, .pillar:active,
@@ -176,10 +175,6 @@
     border-color:var(--mint);
     box-shadow:0 14px 30px -16px rgba(47,220,148,0.45);
     transform:translateY(-3px);
-  }
-  .agent-card.featured:hover, .agent-card.featured:active{
-    border-color:var(--blue);
-    box-shadow:0 14px 30px -16px rgba(47,111,237,0.45);
   }
 
   /* ---------- CHAT MOCKUP ---------- */
@@ -473,7 +468,7 @@
       <p>Cada Agente IA se diseña alrededor de un proceso real de tu empresa. Estas son algunas especialidades posibles:</p>
     </div>
     <div class="agent-grid">
-      <div class="agent-card featured"><h3>ParlendIA Ventas</h3><p>Atiende prospectos, recomienda, cotiza, califica y deriva oportunidades.</p></div>
+      <div class="agent-card"><h3>ParlendIA Ventas</h3><p>Atiende prospectos, recomienda, cotiza, califica y deriva oportunidades.</p></div>
       <div class="agent-card"><h3>ParlendIA Atención</h3><p>Responde consultas, revisa antecedentes, registra solicitudes y guía al cliente.</p></div>
       <div class="agent-card"><h3>ParlendIA Agenda</h3><p>Consulta disponibilidad, agenda, modifica, confirma y recuerda citas.</p></div>
       <div class="agent-card"><h3>ParlendIA Cobranza</h3><p>Informa saldos, envía recordatorios, registra compromisos y facilita medios de pago.</p></div>
@@ -539,9 +534,6 @@
       <div class="scenario"><div class="scenario-name">Agenda</div><div class="scenario-quote">"¿Hay hora mañana después de las 17:00?"</div><div class="scenario-action">Consulta disponibilidad, ofrece alternativas, reserva y confirma.</div></div>
       <div class="scenario"><div class="scenario-name">Cobranza</div><div class="scenario-quote">"¿Cuánto debo?"</div><div class="scenario-action">Identifica al cliente, consulta saldo y entrega alternativas de regularización o pago.</div></div>
       <div class="scenario"><div class="scenario-name">Operaciones</div><div class="scenario-quote">"Necesito solicitar vacaciones del 14 al 18."</div><div class="scenario-action">Consulta política y antecedentes disponibles, registra la solicitud y la envía a aprobación.</div></div>
-    </div>
-    <div style="margin-top:2rem; text-align:center;">
-      <a href="#demo" class="btn primary">Probar ParlendIA con mi empresa</a>
     </div>
   </div>
 </section>
