@@ -186,7 +186,110 @@
     border-color:#D4AF37;
     box-shadow:0 14px 30px -14px rgba(212,175,55,0.55);
   }
-  .agent-card.gold:focus-visible{outline:3px solid #D4AF37; outline-offset:3px;}
+
+  /* ---------- VENTANA INFORMATIVA DE AGENTES ----------
+     Cada tarjeta lleva su contenido dentro (.agent-info). Con mouse se abre
+     como ventana flotante con flecha hacia la tarjeta; en tactil o hasta
+     860 px, como hoja inferior. La posicion la calcula el JS de abajo. */
+  .agent-card{position:relative; --agent-accent:var(--mint); --agent-glow:rgba(47,220,148,0.45); --agent-focus:var(--blue);}
+  .agent-card.gold{--agent-accent:#D4AF37; --agent-glow:rgba(212,175,55,0.55); --agent-focus:#D4AF37;}
+  .agent-card.is-open{border-color:var(--agent-accent); box-shadow:0 14px 30px -16px var(--agent-glow); transform:translateY(-3px);}
+  .agent-card.is-open, .agent-card.is-leaving{z-index:50;}
+
+  .agent-trigger{font:inherit; color:inherit; text-align:left; background:none; border:0; padding:0; margin:0; cursor:default;}
+  /* El area del boton cubre toda la tarjeta, y el foco se dibuja en su borde */
+  .agent-trigger::after{content:""; position:absolute; inset:0; border-radius:8px;}
+  .agent-trigger:focus-visible{outline:none;}
+  .agent-trigger:focus-visible::after{outline:3px solid var(--agent-focus); outline-offset:3px;}
+
+  .agent-info{
+    display:none; position:absolute; left:0; top:0; z-index:1;
+    width:min(460px, 92vw);
+    --from-x:0px; --from-y:0px; --arrow:24px;
+  }
+  .agent-info.is-open{display:block; animation:agentInfoIn .32s cubic-bezier(.34,1.32,.64,1) both;}
+  .agent-info.is-closing{display:block; animation:agentInfoOut .15s ease-in both;}
+  .agent-info[data-side="right"]{--from-x:-10px; transform-origin:0 var(--arrow);}
+  .agent-info[data-side="left"]{--from-x:10px; transform-origin:100% var(--arrow);}
+  .agent-info[data-side="bottom"]{--from-y:-10px; transform-origin:var(--arrow) 0;}
+  .agent-info[data-side="top"]{--from-y:10px; transform-origin:var(--arrow) 100%;}
+  @keyframes agentInfoIn{ from{opacity:0; transform:translate(var(--from-x), var(--from-y)) scale(.92);} to{opacity:1; transform:none;} }
+  @keyframes agentInfoOut{ to{opacity:0; transform:translate(var(--from-x), var(--from-y)) scale(.96);} }
+
+  /* Flecha: cuadrado girado sobre el borde que mira a la tarjeta */
+  .agent-info::before{
+    content:""; position:absolute; z-index:2; width:14px; height:14px;
+    background:var(--panel); border:0 solid var(--agent-accent); transform:rotate(45deg);
+  }
+  .agent-info[data-side="right"]::before{left:-7px; top:calc(var(--arrow) - 7px); border-left-width:1px; border-bottom-width:1px;}
+  .agent-info[data-side="left"]::before{right:-7px; top:calc(var(--arrow) - 7px); border-top-width:1px; border-right-width:1px;}
+  .agent-info[data-side="bottom"]::before{top:-7px; left:calc(var(--arrow) - 7px); border-top-width:1px; border-left-width:1px;}
+  .agent-info[data-side="top"]::before{bottom:-7px; left:calc(var(--arrow) - 7px); border-right-width:1px; border-bottom-width:1px;}
+
+  .agent-info-scroll{
+    position:relative; z-index:1; max-height:80vh; overflow-y:auto; overscroll-behavior:contain;
+    background:var(--panel); border:1px solid var(--agent-accent); border-radius:10px;
+    padding:1.3rem 1.4rem; box-shadow:0 24px 48px -18px rgba(15,34,71,0.35);
+    scrollbar-width:thin; scrollbar-color:rgba(20,33,61,0.22) transparent;
+  }
+  .agent-info-scroll::-webkit-scrollbar{width:6px;}
+  .agent-info-scroll::-webkit-scrollbar-thumb{background:rgba(20,33,61,0.22); border-radius:3px;}
+  .agent-info-close{
+    display:none; font:inherit; font-size:0.85rem; font-weight:600; cursor:pointer;
+    padding:0.45rem 0.9rem; border-radius:6px; border:1px solid var(--line); background:var(--panel); color:var(--ink);
+  }
+
+  .agent-info .agent-info-title{font-size:0.92rem; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink); margin:0 0 0.55rem;}
+  .agent-info .agent-info-lead{font-size:1rem; font-weight:600; line-height:1.45; color:var(--ink); margin-bottom:0.55rem;}
+  .agent-info .agent-info-desc{font-size:0.9rem; line-height:1.55; color:var(--muted);}
+  .agent-info .agent-info-sub{font-size:0.84rem; font-weight:700; color:var(--ink); margin-top:1rem;}
+  .agent-info-list{list-style:none; margin:0.5rem 0 0; padding:0; display:flex; flex-direction:column; gap:0.35rem;}
+  .agent-info-list li{display:flex; gap:0.6rem; align-items:flex-start; font-size:0.87rem; line-height:1.5; color:var(--ink);}
+  .agent-info-list li::before{content:""; width:6px; height:6px; border-radius:50%; background:var(--agent-accent); margin-top:0.55rem; flex-shrink:0;}
+  .agent-info .agent-info-example{font-size:0.87rem; line-height:1.55; color:var(--muted); margin-top:1rem;}
+  .agent-info-tag{font-weight:600; color:var(--ink);}
+  .agent-info .agent-info-limit{font-size:0.85rem; line-height:1.5; color:var(--ink); margin-top:0.85rem; padding:0.65rem 0.85rem; background:var(--paper); border-left:3px solid var(--navy-2); border-radius:0 6px 6px 0;}
+
+  /* Contenido escalonado: el JS numera cada elemento con --i */
+  .agent-info.is-open .ai-step{animation:agentInfoItem .26s ease-out both; animation-delay:calc(90ms + var(--i) * 45ms);}
+  .agent-info.is-open li.ai-step::before{animation:agentInfoPop .32s cubic-bezier(.34,1.56,.64,1) both; animation-delay:calc(150ms + var(--i) * 45ms);}
+  @keyframes agentInfoItem{ from{opacity:0; transform:translateY(6px);} }
+  @keyframes agentInfoPop{ 0%{transform:scale(0);} 70%{transform:scale(1.35);} 100%{transform:scale(1);} }
+
+  /* Ventana de Custom: negra con detalles dorados */
+  .gold .agent-info::before{background:#141414;}
+  .gold .agent-info-scroll{background:linear-gradient(160deg, #141414 0%, #0a0a0a 100%); scrollbar-color:rgba(212,175,55,0.4) transparent;}
+  .gold .agent-info-scroll::-webkit-scrollbar-thumb{background:rgba(212,175,55,0.4);}
+  .gold .agent-info .agent-info-title{color:#D4AF37;}
+  .gold .agent-info .agent-info-lead{color:#F3E2A0;}
+  .gold .agent-info .agent-info-desc, .gold .agent-info .agent-info-example, .gold .agent-info-list li{color:#E8D9A8;}
+  .gold .agent-info .agent-info-sub, .gold .agent-info-tag{color:#D4AF37;}
+  .gold .agent-info .agent-info-limit{color:#E8D9A8; background:rgba(212,175,55,0.08); border-left-color:#D4AF37;}
+  .gold .agent-info-close{background:transparent; border-color:rgba(212,175,55,0.5); color:#D4AF37;}
+
+  /* Tactil o hasta 860 px: hoja inferior fija, sin flecha ni desplazamientos de la tarjeta */
+  @media (max-width: 860px), not all and (hover: hover) and (pointer: fine){
+    .agent-card:hover, .agent-card:active, .agent-card.is-open{transform:none;}
+    .agent-trigger{cursor:pointer;}
+    .agent-info{position:fixed; left:0; right:0; top:auto; bottom:0; width:auto; --from-y:48px; transform-origin:50% 100%;}
+    .agent-info::before{display:none;}
+    .agent-info-scroll{
+      max-height:80vh; border-radius:14px 14px 0 0; border-width:3px 0 0;
+      padding:1rem 1.6rem calc(1.4rem + env(safe-area-inset-bottom));
+      box-shadow:0 -18px 40px -18px rgba(15,34,71,0.45);
+    }
+    .agent-info-close{display:block; position:sticky; top:0; z-index:1; margin:0 0 0.4rem auto;}
+  }
+
+  /* Movimiento reducido: solo un fundido corto (le gana a la regla global) */
+  @keyframes agentInfoFade{ from{opacity:0;} }
+  @keyframes agentInfoFadeOut{ to{opacity:0;} }
+  @media (prefers-reduced-motion: reduce){
+    .agent-card:hover, .agent-card:active, .agent-card.is-open{transform:none;}
+    .agent-info.is-open{animation:agentInfoFade .12s ease both !important;}
+    .agent-info.is-closing{animation:agentInfoFadeOut .12s ease both !important;}
+    .agent-info.is-open li.ai-step::before{animation:none;}
+  }
 
   /* ---------- CHAT MOCKUP ---------- */
   .chat-mockup{background:#fff; border:1px solid var(--line); border-radius:10px; padding:1.5rem; max-width:520px; box-shadow:0 20px 40px -24px rgba(20,33,61,0.3);}
@@ -415,18 +518,199 @@
 <section id="agentes">
   <div class="wrap">
     <div class="section-head">
-      <h2>Agentes especializados</h2>
-      <p>Cada Agente IA se diseña alrededor de un proceso real de tu empresa. Estas son algunas especialidades posibles:</p>
+      <h2>¿Qué agente ParlendIA necesita tu empresa?</h2>
+      <p><em>No todos los agentes realizan las mismas tareas. Cada especialidad está diseñada para resolver una necesidad empresarial diferente.</em></p>
     </div>
     <div class="agent-grid">
-      <div class="agent-card"><h3>ParlendIA Ventas</h3><p>Atiende prospectos, recomienda, cotiza, califica y deriva oportunidades.</p></div>
-      <div class="agent-card"><h3>ParlendIA Atención</h3><p>Responde consultas, revisa antecedentes, registra solicitudes y guía al cliente.</p></div>
-      <div class="agent-card"><h3>ParlendIA Agenda</h3><p>Consulta la disponibilidad real de tu Google Calendar, agenda y confirma citas por WhatsApp.</p></div>
-      <div class="agent-card"><h3>ParlendIA Cobranza</h3><p>Informa saldos, envía recordatorios, registra compromisos y facilita medios de pago.</p></div>
-      <div class="agent-card"><h3>ParlendIA Soporte</h3><p>Responde con la información de tu negocio, pide los detalles del problema, registra el caso con su prioridad (como ticket en HubSpot, si lo usas) y lo deriva a tu equipo.</p></div>
-      <div class="agent-card"><h3>ParlendIA Operaciones</h3><p>Recibe las solicitudes internas de tu equipo por WhatsApp, las registra y las envía a tu aprobación.</p></div>
-      <div class="agent-card"><h3>ParlendIA RR.HH.</h3><p>Responde consultas internas con tu reglamento, informa días de vacaciones y gestiona vacaciones y permisos con tu aprobación.</p></div>
-      <div class="agent-card gold"><h3>ParlendIA Custom</h3><p>Un agente diseñado para un proceso particular, incluso combinando varias funciones.</p></div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-ventas">¿Quieres aumentar las oportunidades de venta?</button></h3>
+        <p>Contrata Ventas.</p>
+        <div class="agent-info" id="agent-info-ventas">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Ventas</h4>
+            <p class="agent-info-lead">Convierte consultas de WhatsApp en oportunidades reales de negocio.</p>
+            <p class="agent-info-desc">Actúa como asesor comercial, identifica necesidades, recomienda productos o servicios y acompaña al cliente durante el proceso de compra.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Recibir y calificar prospectos comerciales.</li>
+            <li>Identificar las necesidades, preferencias y presupuesto del cliente.</li>
+            <li>Recomendar productos o servicios según criterios establecidos.</li>
+            <li>Informar precios, promociones, disponibilidad y condiciones.</li>
+            <li>Preparar cotizaciones a partir de tarifas y reglas comerciales.</li>
+            <li>Registrar prospectos en un CRM, cuando exista integración.</li>
+            <li>Derivar oportunidades de mayor valor a vendedores.</li>
+            <li>Facilitar enlaces de compra o pago, si la empresa dispone de ellos.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un cliente solicita por WhatsApp un sistema de cámaras de seguridad para su negocio. El agente consulta características del local, presenta soluciones, prepara una propuesta preliminar y coordina el cierre comercial.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> desarrolla el proceso comercial. La emisión de documentos tributarios, el cobro y la actualización del inventario requieren integraciones específicas.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-atencion">¿Recibes muchas preguntas repetitivas?</button></h3>
+        <p>Contrata Atención.</p>
+        <div class="agent-info" id="agent-info-atencion">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Atención</h4>
+            <p class="agent-info-lead">Tu empresa atiende consultas las 24 horas, incluso cuando nadie está disponible.</p>
+            <p class="agent-info-desc">Resuelve consultas generales de clientes mediante conversaciones naturales por WhatsApp, utilizando la información oficial de la empresa.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Responder preguntas sobre productos, servicios, horarios, precios y sucursales.</li>
+            <li>Informar requisitos, procedimientos, condiciones comerciales y documentación necesaria.</li>
+            <li>Comprender preguntas formuladas de distintas maneras y mantener el contexto de la conversación.</li>
+            <li>Solicitar antecedentes básicos y derivar casos a una persona cuando corresponda.</li>
+            <li>Registrar consultas y generar estadísticas de atención.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un apoderado consulta por WhatsApp sobre las edades de ingreso, horarios, mensualidades y requisitos de matrícula de un jardín infantil. El agente entrega la información y orienta sobre los siguientes pasos.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> informa y orienta. No reserva horas, realiza ventas ni modifica registros de otros sistemas sin contratar esas capacidades.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-agenda">¿Necesitas organizar citas y reservas?</button></h3>
+        <p>Contrata Agenda.</p>
+        <div class="agent-info" id="agent-info-agenda">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Agenda</h4>
+            <p class="agent-info-lead">Tus clientes reservan, modifican o cancelan sus citas directamente por WhatsApp.</p>
+            <p class="agent-info-desc">Automatiza la coordinación de horas y reservas, disminuyendo el trabajo administrativo y evitando pérdidas de oportunidades por falta de respuesta.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Consultar disponibilidad de días y horarios.</li>
+            <li>Solicitar información previa a la atención.</li>
+            <li>Sincronizar reservas con calendarios o sistemas de agenda compatibles, cuando exista integración.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un paciente escribe: «Necesito una hora con el kinesiólogo el jueves después de las 17:00». El agente consulta la disponibilidad, ofrece alternativas y registra la reserva.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> gestiona citas y disponibilidad. No administra el proceso completo de venta, facturación o atención clínica.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-cobranza">¿Necesitas mejorar el seguimiento de pagos pendientes?</button></h3>
+        <p>Contrata Cobranza.</p>
+        <div class="agent-info" id="agent-info-cobranza">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Cobranza</h4>
+            <p class="agent-info-lead">Reduce la morosidad y automatiza el seguimiento de cuentas pendientes.</p>
+            <p class="agent-info-desc">Gestiona comunicaciones de cobranza administrativa de forma personalizada, respetuosa y basada en información financiera autorizada.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Consultar saldos pendientes en registros autorizados.</li>
+            <li>Informar fechas de vencimiento y montos adeudados.</li>
+            <li>Enviar recordatorios de pago conforme a las autorizaciones aplicables.</li>
+            <li>Comunicar medios de pago disponibles.</li>
+            <li>Entregar enlaces de pago.</li>
+            <li>Registrar compromisos o promesas de pago.</li>
+            <li>Escalar disputas o solicitudes especiales a un responsable.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un apoderado consulta: «¿Tengo pendiente alguna mensualidad?». Después de verificar su identidad, el agente consulta la cuenta corriente, informa el saldo y facilita las instrucciones de pago.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> realiza cobranza administrativa, no judicial. La conciliación bancaria y actualización automática de saldos requieren integración y reglas de validación.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-soporte">¿Tus clientes necesitan ayuda técnica o posventa?</button></h3>
+        <p>Contrata Soporte.</p>
+        <div class="agent-info" id="agent-info-soporte">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Soporte</h4>
+            <p class="agent-info-lead">Resuelve problemas frecuentes y organiza las solicitudes de asistencia.</p>
+            <p class="agent-info-desc">Está diseñado para empresas que necesitan brindar soporte técnico, operativo o de posventa de manera estructurada.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Recibir y clasificar problemas o incidentes.</li>
+            <li>Realizar preguntas de diagnóstico.</li>
+            <li>Guiar al usuario mediante procedimientos de solución.</li>
+            <li>Consultar manuales técnicos, preguntas frecuentes y bases de conocimiento.</li>
+            <li>Crear tickets de soporte en sistemas compatibles.</li>
+            <li>Escalar incidentes complejos a un técnico.</li>
+            <li>Mantener historial de casos y problemas recurrentes.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un usuario informa que su impresora no funciona. El agente identifica el modelo, consulta los síntomas, propone pruebas y, si no logra resolverlo, genera un caso para el servicio técnico.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> diagnostica, orienta y gestiona incidencias. No garantiza reparaciones ni intervenciones remotas en equipos sin herramientas adicionales.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-operaciones">¿Quieres conectar WhatsApp con tus procesos y sistemas de gestión?</button></h3>
+        <p>Contrata Operaciones.</p>
+        <div class="agent-info" id="agent-info-operaciones">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de Operaciones</h4>
+            <p class="agent-info-lead">Consulta información y ejecuta procesos internos mediante instrucciones en lenguaje natural.</p>
+            <p class="agent-info-desc">Conecta la inteligencia artificial con los procesos operacionales de la empresa, utilizando sistemas y fuentes de información previamente autorizados.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Consultar información de inventarios, pedidos y procesos.</li>
+            <li>Informar el estado de órdenes de trabajo o solicitudes.</li>
+            <li>Consultar datos de un ERP u otros sistemas internos.</li>
+            <li>Registrar requerimientos y tareas.</li>
+            <li>Coordinar flujos de aprobación establecidos.</li>
+            <li>Mantener trazabilidad de operaciones ejecutadas.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un administrador pregunta: «¿Cuáles son los pedidos pendientes de despacho hoy?». El agente consulta el sistema, identifica los pendientes y entrega un resumen por cliente.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> se configura para procesos concretos. No implica acceso irrestricto al ERP ni autorización para modificar información financiera o crítica sin controles.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-rrhh">¿Tu equipo de Recursos Humanos recibe demasiadas consultas?</button></h3>
+        <p>Contrata Recursos Humanos.</p>
+        <div class="agent-info" id="agent-info-rrhh">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente de RR.HH</h4>
+            <p class="agent-info-lead">Un asistente interno para atender a los trabajadores de tu empresa.</p>
+            <p class="agent-info-desc">Facilita el acceso a información laboral y reduce las consultas administrativas repetitivas al departamento de Recursos Humanos.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Responder dudas sobre políticas y procedimientos internos.</li>
+            <li>Informar procesos para solicitar vacaciones, permisos y certificados.</li>
+            <li>Consultar saldos de vacaciones cuando exista conexión con los registros.</li>
+            <li>Orientar sobre fechas de pago y procedimientos de remuneraciones.</li>
+            <li>Guiar procesos de incorporación de nuevos trabajadores.</li>
+            <li>Registrar solicitudes y derivarlas al área responsable.</li>
+            <li>Restringir información según la identidad y permisos del trabajador.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Un trabajador pregunta cuántos días de vacaciones tiene disponibles. El agente valida su identidad, consulta la información autorizada y explica cómo solicitar el feriado.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> no reemplaza la gestión de remuneraciones ni toma decisiones laborales. Los datos confidenciales exigen identificación, permisos y controles específicos.</p>
+          </div>
+        </div>
+      </div>
+      <div class="agent-card gold">
+        <h3><button type="button" class="agent-trigger" aria-expanded="false" aria-controls="agent-info-custom">¿Necesitas una solución que combine distintas funciones o procesos especiales?</button></h3>
+        <p>Contrata Custom.</p>
+        <div class="agent-info" id="agent-info-custom">
+          <div class="agent-info-scroll">
+            <button type="button" class="agent-info-close">Cerrar</button>
+            <h4 class="agent-info-title" lang="es-CL">Agente Custom — Solución a Medida</h4>
+            <p class="agent-info-lead">Un agente diseñado específicamente para la forma de trabajar de tu empresa.</p>
+            <p class="agent-info-desc">Solución personalizada para organizaciones que necesitan procesos especiales, integraciones más complejas o funciones que no se ajustan a una sola especialidad.</p>
+            <p class="agent-info-sub">Funciones propuestas</p>
+            <ul class="agent-info-list">
+            <li>Analizar los procesos particulares de la empresa.</li>
+            <li>Diseñar flujos conversacionales y automatizaciones específicas.</li>
+            <li>Combinar capacidades de distintas especialidades.</li>
+            <li>Configurar permisos, validaciones y reglas empresariales especiales.</li>
+            <li>Automatizar procedimientos de varias etapas.</li>
+            <li>Incorporar mecanismos de supervisión y autorización humana.</li>
+            <li>Evaluar mejoras y nuevas funcionalidades posteriores.</li>
+            </ul>
+            <p class="agent-info-example"><em><span class="agent-info-tag">Ejemplo:</span> Una empresa necesita un agente que reciba solicitudes de clientes, consulte su historial, verifique condiciones comerciales, registre una orden en el ERP y derive solicitudes de autorización cuando corresponda.</em></p>
+            <p class="agent-info-limit"><strong>Límite:</strong> es un proyecto de alcance definido, no desarrollo ilimitado. El precio final dependerá de integraciones, complejidad y cantidad de procesos comprometidos.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="section-head" style="margin:2.2rem 0 0;">
+      <p><em>ParlendIA transforma WhatsApp en un canal de trabajo inteligente para tu empresa.</em> Sus agentes especializados pueden comprender solicitudes, utilizar información autorizada y realizar las tareas configuradas para cada servicio, con las integraciones y controles que correspondan.</p>
     </div>
   </div>
 </section>
@@ -689,6 +973,150 @@
       var el = document.getElementById(id);
       if (el) observer.observe(el);
     });
+  })();
+</script>
+
+<script>
+  (function(){
+    // Ventana informativa de cada tarjeta de agente. Con mouse abre tras
+    // 120 ms de intencion y cierra tras 150 ms de gracia (para cruzar el
+    // espacio hasta la ventana); en tactil o hasta 860 px abre al tocar,
+    // como hoja inferior. Solo una abierta a la vez.
+    var cards = document.querySelectorAll('.agent-card');
+    var siteNav = document.getElementById('siteNav');
+    var sheetMQ = window.matchMedia('(max-width: 860px), not all and (hover: hover) and (pointer: fine)');
+    var reducedMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+    var GAP = 12, EDGE = 8;
+    var current = null, openTimer = null, closeTimer = null, skipFocus = false;
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(v, max)); }
+
+    function place(card, panel){
+      var scroller = panel.querySelector('.agent-info-scroll');
+      var vw = document.documentElement.clientWidth, vh = window.innerHeight;
+      var minY = Math.max(EDGE, siteNav.getBoundingClientRect().bottom + EDGE), maxY = vh - EDGE;
+      scroller.style.maxHeight = Math.min(vh * 0.8, maxY - minY) + 'px';
+      var r = card.getBoundingClientRect();
+      var W = panel.offsetWidth, H = panel.offsetHeight;
+      // Centro de la parte visible de la tarjeta: hacia ahi apunta la flecha
+      var cy = (Math.max(r.top, minY) + Math.min(r.bottom, maxY)) / 2;
+      var cx = r.left + r.width / 2;
+      var side, x, y;
+      if (r.right + GAP + W <= vw - EDGE){
+        side = 'right'; x = r.right + GAP; y = clamp(cy - H / 2, minY, maxY - H);
+      } else if (r.left - GAP - W >= EDGE){
+        side = 'left'; x = r.left - GAP - W; y = clamp(cy - H / 2, minY, maxY - H);
+      } else {
+        x = clamp(cx - W / 2, EDGE, vw - EDGE - W);
+        var below = maxY - (r.bottom + GAP), above = (r.top - GAP) - minY;
+        side = (H <= below || below >= above) ? 'bottom' : 'top';
+        var room = side === 'bottom' ? below : above;
+        if (H > room){ scroller.style.maxHeight = Math.max(room, 120) + 'px'; H = panel.offsetHeight; }
+        y = side === 'bottom' ? r.bottom + GAP : r.top - GAP - H;
+      }
+      var arrow = (side === 'right' || side === 'left') ? clamp(cy - y, 18, H - 18) : clamp(cx - x, 18, W - 18);
+      panel.setAttribute('data-side', side);
+      panel.style.setProperty('--arrow', arrow + 'px');
+      panel.style.left = (x - r.left - card.clientLeft) + 'px';
+      panel.style.top = (y - r.top - card.clientTop) + 'px';
+    }
+
+    function open(card){
+      clearTimeout(openTimer); clearTimeout(closeTimer);
+      if (current === card) return;
+      if (current) close(current);
+      var panel = card.querySelector('.agent-info');
+      clearTimeout(panel._leave);
+      card.classList.remove('is-leaving');
+      panel.classList.remove('is-closing');
+      panel.removeAttribute('data-side');
+      panel.style.left = panel.style.top = '';
+      panel.querySelector('.agent-info-scroll').style.maxHeight = '';
+      card.classList.add('is-open');
+      panel.classList.add('is-open');
+      card.querySelector('.agent-trigger').setAttribute('aria-expanded', 'true');
+      if (!sheetMQ.matches) place(card, panel);
+      current = card;
+    }
+
+    function close(card){
+      clearTimeout(openTimer); clearTimeout(closeTimer);
+      var panel = card.querySelector('.agent-info');
+      if (!panel.classList.contains('is-open')) return;
+      card.classList.remove('is-open');
+      card.classList.add('is-leaving');
+      card.querySelector('.agent-trigger').setAttribute('aria-expanded', 'false');
+      panel.classList.remove('is-open');
+      panel.classList.add('is-closing');
+      if (current === card) current = null;
+      panel._leave = setTimeout(function(){
+        panel.classList.remove('is-closing');
+        card.classList.remove('is-leaving');
+      }, reducedMQ.matches ? 130 : 160);
+    }
+
+    // Devuelve el foco a la tarjeta sin que eso la vuelva a abrir
+    function refocus(card){
+      skipFocus = true;
+      card.querySelector('.agent-trigger').focus();
+      skipFocus = false;
+    }
+
+    cards.forEach(function(card){
+      var trigger = card.querySelector('.agent-trigger');
+      var panel = card.querySelector('.agent-info');
+      if (!trigger || !panel) return;
+
+      // Numera los elementos para la entrada escalonada
+      var steps = panel.querySelectorAll('.agent-info-title, .agent-info-lead, .agent-info-desc, .agent-info-sub, .agent-info-list li, .agent-info-example, .agent-info-limit');
+      steps.forEach(function(el, i){ el.classList.add('ai-step'); el.style.setProperty('--i', i); });
+
+      card.addEventListener('mouseenter', function(){
+        if (sheetMQ.matches) return;
+        if (current === card){ clearTimeout(closeTimer); return; }
+        clearTimeout(openTimer);
+        openTimer = setTimeout(function(){ open(card); }, 120);
+      });
+      card.addEventListener('mouseleave', function(){
+        if (sheetMQ.matches) return;
+        clearTimeout(openTimer);
+        if (current === card) closeTimer = setTimeout(function(){ close(card); }, 150);
+      });
+
+      trigger.addEventListener('focus', function(){
+        if (!skipFocus && !sheetMQ.matches) open(card);
+      });
+      card.addEventListener('focusout', function(e){
+        if (current === card && !card.contains(e.relatedTarget)) close(card);
+      });
+      trigger.addEventListener('click', function(){
+        if (sheetMQ.matches && current === card) close(card);
+        else open(card);
+      });
+      panel.querySelector('.agent-info-close').addEventListener('click', function(){
+        close(card);
+        refocus(card);
+      });
+    });
+
+    document.addEventListener('keydown', function(e){
+      if (e.key !== 'Escape' || !current) return;
+      var card = current;
+      close(card);
+      if (card.contains(document.activeElement)) refocus(card);
+    });
+    document.addEventListener('click', function(e){
+      if (current && !current.contains(e.target)) close(current);
+    });
+    // El scroll cierra la ventana. Si se abrio con el teclado y la tarjeta
+    // sigue con el foco (Tab desplaza la pagina hasta ella), solo la reubica.
+    window.addEventListener('scroll', function(){
+      if (!current) return;
+      var trigger = current.querySelector('.agent-trigger');
+      if (!sheetMQ.matches && document.activeElement === trigger && trigger.matches(':focus-visible')) place(current, current.querySelector('.agent-info'));
+      else close(current);
+    }, {passive:true});
+    window.addEventListener('resize', function(){ if (current) close(current); });
   })();
 </script>
 
